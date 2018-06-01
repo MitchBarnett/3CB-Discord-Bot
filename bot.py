@@ -1,5 +1,6 @@
 import discord
 import asyncio
+import config
 
 client = discord.Client()
 
@@ -18,5 +19,6 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.content.startswith('!test'):
-        client.send_message("test")        
-client.run('TOKEN')
+        await client.send_message(message.channel, "test")
+        
+client.run(config.getValue("token"))
