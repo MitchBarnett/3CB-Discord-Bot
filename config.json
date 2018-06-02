@@ -1,3 +1,5 @@
 {
-    "token": "TokenGoesHere"
+   "token":"TokenGoesHere",
+   "serverIP": "game.3commandobrigade.com",
+   "serverPort": "2362"
 }
