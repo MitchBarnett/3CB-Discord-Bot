@@ -9,7 +9,7 @@ A discord bot that provides information about 3CB
   * Python 3.5+
 * Install dependent packages
   * `python -m pip install -U discord.py`
-  * `python -m pip install -U Python-valve`
+  * `python -m pip install -U git+https://github.com/MitchBarnett/python-valve.git`
 * Visit:  https://discordapp.com/developers/applications/me and create a new application
 * With the application created select "Create a Bot User"
 * In config.json set token to the newly created bots token.
