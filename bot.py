@@ -17,22 +17,31 @@ def registerCommands(client):
 
     @client.event
     async def on_message(message):
-        if message.content.startswith("!mission"):
+        if message.content.lower().startswith("!mission"):
             info = serverInfo.getInfo()
-            await client.send_message(message.channel, "The current mission is %s on %s" % (info.game, info.map))
+            if info is None:
+                await client.send_message(message.channel, "The server is currently offline")
+            else:
+                await client.send_message(message.channel, "The current mission is %s on %s" % (info.game, info.map))
 
-        elif message.content.startswith("!players"):
+        elif message.content.lower().startswith("!players"):
             info = serverInfo.getInfo()
-            await client.send_message(message.channel, "There is currently %i players online" % info.player_count)
+            if info is None:
+                await client.send_message(message.channel, "The server is currently offline")
+            else:
+                await client.send_message(message.channel, "There is currently %i players online" % info.player_count)
 
-        elif message.content.startswith("!who"):
+        elif message.content.lower().startswith("!who"):
             players = serverInfo.getPlayers()
-            embed = discord.Embed(title="Players Online", description="")
-            for player in players.players:
-                embed.add_field(name=player.name, value= str(int(player.duration / 60)) + " mins" , inline=True)
-            await client.send_message(message.channel, embed=embed)
-
-        elif message.content.startswith("!gettingStarted"):
+            if players is None:
+                await client.send_message(message.channel, "The server is currently offline")
+            else:
+                embed = discord.Embed(title="Players Online", description="")
+                for player in players.players:
+                    embed.add_field(name=player.name, value= str(int(player.duration / 60)) + " mins " + str(player.score), inline=True)
+                await client.send_message(message.channel, embed=embed)
+        
+        elif message.content.lower().startswith("!gettingstarted") or message.content.lower().startswith("!quickstart"):
             steps = ("1. Download and install [TeamSpeak 3](https://www.teamspeak.com/teamspeak3)\n"
                     "2. Download and install [Arma3Sync](http://www.armaholic.com/page.php?id=22199).\n"
                     "3. Within Arma3Sync create a new repository using the auto-config url: http://repo.3commandobrigade.com/autoconfig\n"
@@ -45,7 +54,7 @@ def registerCommands(client):
             embed = discord.Embed(title="Overview of Steps to get you up and running", description=steps, url="https://www.3commandobrigade.com/viewtopic.php?f=57&t=1765&p=13754" )
             await client.send_message(message.channel, embed=embed)
 
-        elif message.content.startswith("!opTimes"):
+        elif message.content.lower().startswith("!optimes"):
             steps = ("__**Public:**__\n"
                     "The public server runs missions 24/7 using ALIVE \n"
                     "Missions are rotated on Wednesday and Sunday Nights\n"
@@ -55,5 +64,5 @@ def registerCommands(client):
                     "Wednesday Mid-Week Op: 19:30\n"
                     "Friday Patrol Op: 20:00")
             embed = discord.Embed(title="3CB Standard Operation Times", description=steps)
-            embed.set_footer(text="All times in BST")
+            embed.set_footer(text="All times in GMT")
             await client.send_message(message.channel, embed=embed)
