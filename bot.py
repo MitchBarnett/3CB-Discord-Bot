@@ -1,3 +1,4 @@
+
 import discord
 import asyncio
 import config
@@ -57,3 +58,25 @@ def registerCommands(client):
             embed = discord.Embed(title="3CB Standard Operation Times", description=steps)
             embed.set_footer(text="All times in BST")
             await client.send_message(message.channel, embed=embed)
+
+    async def check_mission_change():
+        await client.wait_until_ready()
+        info = serverInfo.getInfo()
+        channel = discord.Object(id='449340931867410474')
+        if info is None:
+            current_mission = "offline"
+        else:
+            current_mission = info.game
+
+        while not client.is_closed:
+            info = serverInfo.getInfo()
+            if info is None and current_misssion != "offline":
+                await client.send_message(channel, "The server is now offline")
+                current_mission = "offline"
+            elif info.game != current_mission:
+                if current_mission == "offline":
+                    await client.send_message(channel, "The server back online")
+                await client.send_message(channel, "Mission changed to %s on %s" % (info.game, info.map))
+
+            await asyncio.sleep(30)
+    client.loop.create_task(check_mission_change())
