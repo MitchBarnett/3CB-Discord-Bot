@@ -3,14 +3,20 @@ import config
 import discord
 import logging
 
+file_handler = logging.FileHandler(filename='log.log')
+stdout_handler = logging.StreamHandler()
+handlers = [file_handler, stdout_handler]
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] {%(filename)s} %(levelname)s - %(message)s',
+    datefmt='%d-%b-%Y %I:%M:%S',
+    handlers=handlers
+)
+
+
 client = discord.Client()
 bot.registerCommands(client)
-
-FORMAT = '%(asctime)s %(message)s'
-DATE = '%d-%b-%Y %I:%M:%S'
-logging.basicConfig(filename="log.log",level=logging.INFO,format=FORMAT,datefmt=DATE)
-logger = logging.getLogger('Stackoverflow log')
-logger.info('Info 1')
 
 try:
     client.run(config.getValue("token"))

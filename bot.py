@@ -102,14 +102,16 @@ def registerCommands(client):
             current_mission = info.game
 
         while not client.is_closed:
+            log.info("checking if mission has changed")
             info = serverInfo.getInfo()
-            if info is None and current_misssion != "offline":
+            if info is None and current_mission != "offline":
                 await client.send_message(channel, "The server is now offline")
                 current_mission = "offline"
             elif info.game != current_mission:
                 if current_mission == "offline":
                     await client.send_message(channel, "The server back online")
                 await client.send_message(channel, "Mission changed to %s on %s" % (info.game, info.map))
+                current_mission = info.game
 
             await asyncio.sleep(30)
     client.loop.create_task(check_mission_change())
